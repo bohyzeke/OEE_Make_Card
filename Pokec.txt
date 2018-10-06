@@ -1,0 +1,18 @@
+
+
+Pre spravne fungovanie treba dodrzat cesty :
+
+ - C:\Program Files (x86)\Phoenix Contact\Connect Plus\ConnectPlus.exe
+
+ - @ScriptDir &"\Source\IPAssign.exe"
+
+ - "C:\Windows\System32\cmd.exe"
+
+ - @ScriptDir & "\temp\CONFIG.XML"
+
+ Z drojove subory musia lezat :
+
+  - @ScriptDir & "\Source\ilc170\*.*"
+  - @ScriptDir & "\Source\ilc191\*.*"
+  - @ScriptDir & "\Source\ilc191mssql\*.*"
+  - @ScriptDir & "\Source\ilc191mysql\*.*"
