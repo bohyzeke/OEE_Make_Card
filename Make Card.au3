@@ -1,10 +1,34 @@
+#NoTrayIcon
+#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#AutoIt3Wrapper_Version=beta
+#AutoIt3Wrapper_icon=Source\ZF.ico
+#AutoIt3Wrapper_outfile=Bin\Make_Card.exe
+#AutoIt3Wrapper_Res_Comment=ZF Slovakia Automation Pluss  Make_Card
+#AutoIt3Wrapper_Res_Description=ZF Slovakia Automation Pluss  Make_Card
+#AutoIt3Wrapper_Res_Fileversion=0.1.0.4
+#AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
+#AutoIt3Wrapper_Res_LegalCopyright=ZF Slovakia
+#AutoIt3Wrapper_Res_Field=Company|ZFSlovakia
+#AutoIt3Wrapper_Res_Field=Creator| Eduard Bohacek
+#AutoIt3Wrapper_Res_Field=PerNo |2226
+#AutoIt3Wrapper_Res_Field=Tel.no|9760
+#AutoIt3Wrapper_Add_Constants=n
+#Tidy_Parameters=/tc 3 /gd
+#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
+; *** Start added by AutoIt3Wrapper ***
+#include <AutoItConstants.au3>
+#include <ButtonConstants.au3>
+#include <FileConstants.au3>
+; *** End added by AutoIt3Wrapper ***
+#AutoIt3Wrapper_Res_File_Add=
+
 #cs ----------------------------------------------------------------------------
 
  AutoIt Version: 3.3.14.1
  Author:		Eduard Bohacek
  Script Name : 	Make Card
- Version : 		1.0.2
- Date : 		2016 09 17
+ Version : 		0.1.0.0
+ Date : 		2018 10 06
 
  Script Function:
 	Vytvorenie Karty pre ILC Phoenix.
