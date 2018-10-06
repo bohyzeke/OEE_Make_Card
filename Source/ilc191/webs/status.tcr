@@ -1,0 +1,60 @@
+#!-- PPO FILE GENERATED FROM Phoenix Contact®   WebVisit on Friday, August 17, 2012 ; 10:55:33
+#!-- Start PPO INIT File
+#!-- VERSION = 3
+#!-- TYPE = 1
+#!-- TS = 502e0705
+#!-- N = 52
+@GV.G_rCountfaktor;@GV.G_rCountfaktor; ; ;FLT2DEC0; ; ;
+@GV.G_strBezeichnung;@GV.G_strBezeichnung; ; ; ; ; ;
+@GV.LICENSE;@GV.LICENSE; ; ;String; ; ;
+@GV.PLCMODE_RUN;@GV.PLCMODE_RUN; ; ; ; ; ;
+@GV.V_diSQLError1;@GV.V_diSQLError1; ; ; ; ; ;
+@GV.V_diSQLError2;@GV.V_diSQLError2; ; ; ; ; ;
+@GV.V_diSQLError3;@GV.V_diSQLError3; ; ; ; ; ;
+@GV.V_diTCPError1;@GV.V_diTCPError1; ; ; ; ; ;
+@GV.V_diTCPError2;@GV.V_diTCPError2; ; ; ; ; ;
+@GV.V_diTCPError3;@GV.V_diTCPError3; ; ; ; ; ;
+@GV.V_iBetriebszustand;@GV.V_iBetriebszustand; ; ; ; ; ;
+@GV.V_iProzessdatenIoNio;@GV.V_iProzessdatenIoNio; ; ; ; ; ;
+@GV.V_iip1;@GV.V_iip1; ; ; ; ; ;
+@GV.V_iip2;@GV.V_iip2; ; ; ; ; ;
+@GV.V_iip3;@GV.V_iip3; ; ; ; ; ;
+@GV.V_iip4;@GV.V_iip4; ; ; ; ; ;
+@GV.V_ireadpufferbetrieb;@GV.V_ireadpufferbetrieb; ; ; ; ; ;
+@GV.V_ireadpufferproz;@GV.V_ireadpufferproz; ; ; ; ; ;
+@GV.V_iwritepufferbetieb;@GV.V_iwritepufferbetieb; ; ; ; ; ;
+@GV.V_iwritepufferproz;@GV.V_iwritepufferproz; ; ; ; ; ;
+@GV.V_rCount;@GV.V_rCount; ; ;FLT2DEC0; ; ;
+@GV.V_rkWPeak;@GV.V_rkWPeak; ; ;FLT2DEC3;kW; ;
+@GV.V_rkWh;@GV.V_rkWh; ; ;FLT2DEC3;kWh; ;
+@GV.V_rkWh_akt;@GV.V_rkWh_akt; ; ;FLT2DEC3;kWh; ;
+@GV.V_rm3Peak_gas;@GV.V_rm3Peak_gas; ; ;FLT2DEC3;m³; ;
+@GV.V_rm3Peak_luft;@GV.V_rm3Peak_luft; ; ;FLT2DEC3;m³; ;
+@GV.V_rm3h_gas;@GV.V_rm3h_gas; ; ;FLT2DEC3;m³; ;
+@GV.V_rm3h_gas_akt;@GV.V_rm3h_gas_akt; ; ;FLT2DEC3;m³; ;
+@GV.V_rm3h_luft;@GV.V_rm3h_luft; ; ;FLT2DEC3;m³; ;
+@GV.V_rm3h_luft_akt;@GV.V_rm3h_luft_akt; ; ;FLT2DEC3;m³; ;
+@GV.V_rsetzwert;@GV.V_rsetzwert; ; ;FLT2DEC0; ; ;
+@GV.V_rzaehlwert;@GV.V_rzaehlwert; ; ;FLT2DEC0; ; ;
+@GV.V_strBetriebsartTimestamp;@GV.V_strBetriebsartTimestamp; ; ; ; ; ;
+@GV.V_strDatenbankBenutzername;@GV.V_strDatenbankBenutzername; ; ; ; ; ;
+@GV.V_strDatenbankIPAdresse;@GV.V_strDatenbankIPAdresse; ; ; ; ; ;
+@GV.V_strDatenbankName;@GV.V_strDatenbankName; ; ; ; ; ;
+@GV.V_strIP;@GV.V_strIP; ; ; ; ; ;
+@GV.V_strProgversion;@GV.V_strProgversion; ; ; ; ; ;
+@GV.V_strProzessdatenTimestamp;@GV.V_strProzessdatenTimestamp; ; ; ; ; ;
+@GV.V_strSeriennr;@GV.V_strSeriennr; ; ; ; ; ;
+@GV.V_strSqlError1;@GV.V_strSqlError1; ; ; ; ; ;
+@GV.V_strSqlError2;@GV.V_strSqlError2; ; ; ; ; ;
+@GV.V_strSqlError3;@GV.V_strSqlError3; ; ; ; ; ;
+@GV.V_strZeitstempel;@GV.V_strZeitstempel; ; ; ; ; ;
+@GV.V_strcpu;@GV.V_strcpu; ; ; ; ; ;
+@GV.V_strfirmware;@GV.V_strfirmware; ; ; ; ; ;
+@GV.V_tImpulstauer;@GV.V_tImpulstauer; ; ;DEC.3;sec; ;
+@GV.V_xreset;@GV.V_xreset; ; ; ; ; ;
+@GV.V_xsetip;@GV.V_xsetip; ; ; ; ; ;
+@GV.V_xsetzaehler;@GV.V_xsetzaehler; ; ; ; ; ;
+@GV.V_xwreset;@GV.V_xwreset; ; ; ; ; ;
+@GV.v_xFirmware;@GV.v_xFirmware; ; ; ; ; ;
+#!-- End PPO INIT File
+
