@@ -1,0 +1,9 @@
+===================================
+2018-10-03 Verzia suboru 0.1.0.5
+===================================
+Oprava funkcie PutFileData() 
+Po odoslani suboru na FTp sa neresetla premenna a nedalo sa dalej upravovat
+Nefunkcne tlacidlo FTP Update stiahni
+
+
+================================================================================

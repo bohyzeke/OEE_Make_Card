@@ -20,14 +20,14 @@
 #include <ButtonConstants.au3>
 #include <FileConstants.au3>
 ; *** End added by AutoIt3Wrapper ***
-#AutoIt3Wrapper_Res_File_Add=
+
 
 #cs ----------------------------------------------------------------------------
 
  AutoIt Version: 3.3.14.1
  Author:		Eduard Bohacek
  Script Name : 	Make Card
- Version : 		0.1.0.0
+ Version : 		0.1.0.4
  Date : 		2018 10 06
 
  Script Function:
@@ -59,8 +59,10 @@ Global $ILCName = IniRead( $INI,"ILC","Name","TRNF56001")
 Global $ILCSerial = IniRead($INI,"ILC","Serial","001234567890")
 Global $data=""
 Global $fIlcType, $EditNo ,$ILCIP
-
+global $test= 1
 Global $Eror = False
+
+
 
 Global $MainWin = GUICreate("ILC Konfig", 300, 300)
 
@@ -83,7 +85,7 @@ GUICtrlCreateTabItem("Make Card")
 GUICtrlCreateLabel("Serial no.",10, 75)
 Global $idHWSerial = GUICtrlCreateInput($ILCSerial,80,70,100)
 Global $idILC170 = GUICtrlCreateRadio("ILC 170",50,100)
-Global $idILC190 = GUICtrlCreateRadio("ILC 191",170,100)
+Global $idILC191 = GUICtrlCreateRadio("ILC 191",170,100)
 Global $idCartWrite = GUICtrlCreateButton("Write Card",75,150,120,80)
 
 ; Tab Podpornych programov
@@ -130,7 +132,11 @@ Local $idFWrite = GUICtrlCreateButton("Zapis", 150,200, 50)
 
 GUISetState()
 
-
+; Main loop
+; Status: Uvolnena
+; Start : 0.0.0.0
+; Zmena : 0.1.0.4
+; Popis : Hlavny program
 Local $idMsg
 	; Loop until the user exits.
 	While 1
@@ -154,22 +160,22 @@ Local $idMsg
 	   If $idMsg = $idUtilCMD Then		; Spustenie CMD
 		  GETIP()
 		  CMD()
-;~ 		  MsgBox("", "Chyba pripojenia", "'Pokus" )
 	   EndIf
 	   If $idMsg = $idCartWrite Then 	; Zapisanie konfigu na kartu
 		  If GUICtrlRead ($idILC170) = $GUI_CHECKED then Card170()
-		  If GUICtrlRead ($idILC190) = $GUI_CHECKED then Card190()
-		  If GUICtrlRead ($idILC170) = $GUI_UNCHECKED And GUICtrlRead ($idILC190) = $GUI_UNCHECKED Then
+		  If GUICtrlRead ($idILC191) = $GUI_CHECKED then CARD191()
+		  If GUICtrlRead ($idILC170) = $GUI_UNCHECKED And GUICtrlRead ($idILC191) = $GUI_UNCHECKED Then
 			 MsgBox( $MB_ICONWARNING, "Chyba","Oznac typ ILC")
 		  EndIf
 		  If $eror == False then
 			 GUICtrlSetState($idILC170,$GUI_UNCHECKED )
-			 GUICtrlSetState($idILC190,$GUI_UNCHECKED )
+			 GUICtrlSetState($idILC191,$GUI_UNCHECKED )
 ;~ 			 GUICtrlSetData($idHWSerial,"00")
 			 GUICtrlSetData($idHWSerial,"001234567890")
 		  EndIf
 	   EndIf
 	   If $idMsg = $idFGet Then 		; FTP Nacitanie ILC konfigu cez ftp
+		  ;FileDelete ( $Dir&"\temp\CONFIG.XML" )
 		  GETIP()
 		  FtpGetFile()
 		  CheckFileVersion()
@@ -214,8 +220,14 @@ Local $idMsg
 
 		  ExitLoop
 	   EndIf
-	WEnd
+   WEnd
 
+
+; CMD()
+; Status: Uvolnena
+; Start : 0.0.0.0
+; Zmena : 0.1.0.4
+; Popis : Spustenie prikazoveho riadka a Ping
 Func CMD()
     Local $IP =$ILCIP
     If WinExists("C:\Windows\System32\cmd.exe") Then WinClose("C:\Windows\System32\cmd.exe")
@@ -226,8 +238,13 @@ Func CMD()
     Send("ping "&$IP&" -t{Enter}")
 EndFunc
 
+; PutFileData()
+; Status: Uvolnena
+; Start : 0.0.0.0
+; Zmena : 0.1.0.5
+; Popis : Zapisanie udajov Do CONFIG.XML
 Func PutFileData()
-
+MsgBox(0,"",$EditNo)
     If BitAND($EditNo,1) Then
 	   $data = '		<v t="ip">' & GUICtrlRead($idEditServer) & '</v>'
 	   _FileWriteToLine($Dir & "\temp\CONFIG.XML", 4,$data, True)
@@ -257,10 +274,14 @@ Func PutFileData()
 	  GUICtrlSetState($idEditSerNo, $GUI_HIDE)
 	  GUICtrlSetState($idEditILCIP, $GUI_HIDE)
 	  GUICtrlSetState($idEditilcName, $GUI_HIDE)
+	  $EditNo =0
 EndFunc
 
-
-;~ Funkcia pre zapis na config.xml na Ftp
+; FTPPutFile()
+; Status: Uvolnena
+; Start : 0.0.0.0
+; Zmena : 0.1.0.4
+; Popis : Funkcia pre zapis na config.xml na Ftp
 Func FTPPutFile()
     Local $IP = $ILCIP
 	Local $Edo , $Result
@@ -289,7 +310,11 @@ Func FTPPutFile()
 
 EndFunc
 
-;~ Funkcia pre vyber Tabu
+; TabSel()
+; Status: Uvolnena
+; Start : 0.0.0.0
+; Zmena : 0.1.0.4
+; Popis : Funkcia pre vyber Tabu
 Func TabSel()
     Local $sTab = GUICtrlRead($idTab)
 ;~     MsgBox("","",$idTab)
@@ -304,8 +329,13 @@ Func TabSel()
     EndIf
 EndFunc
 
-;~ Ziskanie dat zo suboru Config
+; GetFileData()
+; Status: Uvolnena
+; Start : 0.0.0.0
+; Zmena : 0.1.0.4
+; Popis : Ziskanie dat zo suboru Config
 Func GetFileData()
+
     Local $hFileOpen = FileOpen($Dir&"\temp\CONFIG.XML", $FO_READ)
     If $hFileOpen = -1 Then
         MsgBox($MB_ICONERROR, "", "An error occurred when reading the file.")
@@ -330,7 +360,11 @@ Func GetFileData()
 
 EndFunc
 
-;~ Citanie riadku a jeho orezanie
+; fReadLine($file,$line,$start,$end)
+; Status: Uvolnena
+; Start : 0.0.0.0
+; Zmena : 0.1.0.4
+; Popis : Citanie riadku a jeho orezanie
 Func fReadLine($file,$line,$start,$end)
     Local $lFileRead = FileReadLine($file, $line)
     Local $data = StringTrimLeft($lFileRead,$start)
@@ -338,7 +372,11 @@ Func fReadLine($file,$line,$start,$end)
 	Return $data
 EndFunc
 
-;~ Preverenie verzie Config suboru
+; CheckFileVersion()
+; Status: Uvolnena
+; Start : 0.0.0.0
+; Zmena : 0.1.0.4
+; Popis : Preverenie verzie Config suboru
 Func CheckFileVersion()
     Local $Flines = _FileCountLines($Dir&"\temp\CONFIG.XML")
 ;~     MsgBox ("","Countlines",$Flines)
@@ -346,22 +384,27 @@ Func CheckFileVersion()
     If $Flines == 24 Then $fIlcType = 190
 EndFunc
 
-;~ ziskanie Config.XML z FTP
+; FtpGetFile()
+; Status: Uvolnena
+; Start : 0.0.0.0
+; Zmena : 0.1.0.4
+; Popis : ziskanie Config.XML z FTP
 Func FtpGetFile()
     Local $IP =$ILCIP
-    CMD()
+    ;CMD()
     Local $iPing = Ping($IP, 250)
-    If $iPing Then ; If a value greater than 0 was returned then display the following message.
 
+    If $iPing Then ; If a value greater than 0 was returned then display the following message.
 	   Local $FtpOpen = _FTP_Open("FTP ILC")
 	   Local $FtpConn = _FTP_Connect($FtpOpen,$IP,"anonymous","anonymous")
 	   If @error Then
 		  MsgBox ($MB_ICONERROR, '_FTP_Pripojenie', 'Chyba=' & @error)
 	   Else
-		  Local $ltemp = _FTP_FileGet($FtpConn,"CONFIG.XML",$dir&"\temp\CONFIG.XML")
+		  _FTP_FileGet($FtpConn,"CONFIG.XML",$dir&"\temp\CONFIG.XML")
+		  ;_FTP_FileGet($FtpConn,"Project.INI",$dir&"\temp\Project.INI")
 	   EndIf
-		  _FTP_Close($FtpConn)
-		  _FTP_Close($FtpOpen)
+	   Local $iFtpc = _FTP_Close($FtpConn)
+	   Local $iFtpo = _FTP_Close($FtpOpen)
 
     Else
 	   MsgBox($MB_ICONERROR, "Chyba pripojenia", "Zariaddenie "&$IP&" nie je dostupne" )
@@ -369,7 +412,11 @@ Func FtpGetFile()
 
 EndFunc
 
-;~ Zapis na kartu ILC170
+; CARD170()
+; Status: Uvolnena
+; Start : 0.0.0.0
+; Zmena : 0.1.0.4
+; Popis : Zapis na kartu ILC170
 Func CARD170()
     $Eror = False
 
@@ -395,8 +442,12 @@ Func CARD170()
 
 EndFunc
 
-;~ Zapis nakartu ILC190
-Func CARD190()
+; CARD191()
+; Status: Uvolnena
+; Start : 0.0.0.0
+; Zmena : 0.1.0.4
+; Popis : Zapis nakartu ILC191
+Func CARD191()
     $Eror = False
 
     GETIP()
@@ -422,7 +473,42 @@ Func CARD190()
 ;~    _FileWriteToLine($Dir & "\Source\ILC170\CONFIG.XML", 4,$data, True)
 EndFunc
 
-;~ Funkcia pre kontrolu SD karty
+; CARD191MS()
+; Status: Uvolnena
+; Start : 0.1.0.5
+; Zmena : 0.1.0.5
+; Popis : Zapis nakartu ILC191
+Func CARD191MS()
+    $Eror = False
+
+    GETIP()
+    If Not $Eror Then SerialCheck()
+    If Not $Eror Then CheckCard()
+
+	If Not $Eror Then
+	   DirCopy($dir & "\Source\ILC191",$Dest & "\cfroot",$fc_overwrite)
+	   $data = '		<v t="ip">' & $SerIP & '</v>'
+	   _FileWriteToLine($Dest & "\cfroot\config.xml", 4,$data, True)
+	   $data = '		<v t="ip">' & $ILCIP & '</v>'
+	   _FileWriteToLine($Dest & "\cfroot\config.xml", 11,$data, True)
+	   $data = '		<v t="HostName">' & GUICtrlRead($idILCName) & '</v>'
+	   _FileWriteToLine($Dest & "\cfroot\config.xml", 13,$data, True)
+	   $data = '		<v t="serialnr">' & GUICtrlRead($idHWSerial)& '</v>'
+	   _FileWriteToLine($Dest & "\cfroot\config.xml", 22,$data, True)
+
+	   IniWrite($INI,"ILC","Name",GUICtrlRead($idILCName))
+	   IniWrite($INI,"","",GUICtrlRead($idHWSerial))
+	   MsgBox($MB_ICONINFORMATION,"Kopirovanie","Kopirovanie bolo uspesne",5)
+	EndIf
+;~    DirCopy($Dir&"\Source\ILC191",$dest&"ROOT",$FC_OVERWRITE )
+;~    _FileWriteToLine($Dir & "\Source\ILC170\CONFIG.XML", 4,$data, True)
+EndFunc
+
+; CheckCard ()
+; Status: Uvolnena
+; Start : 0.0.0.0
+; Zmena : 0.1.0.4
+; Popis : Funkcia pre kontrolu SD karty
 Func CheckCard ()
     $Eror = False
     local $ltemp
@@ -461,7 +547,11 @@ Func CheckCard ()
 
 EndFunc
 
-;~ Funkcia pre kontrolu Serioveho cisla z Vstupneho pola
+; SerialCheck()
+; Status: Uvolnena
+; Start : 0.0.0.0
+; Zmena : 0.1.0.4
+; Popis : Funkcia pre kontrolu Serioveho cisla z Vstupneho pola
 Func SerialCheck()
 
     Local $ltemp = GUICtrlRead($idHWSerial)
@@ -478,7 +568,11 @@ Func SerialCheck()
 
 EndFunc
 
-;~ Funkcia pre kontrolu DNS Mena a ziskanie IP adresy
+; GETIP()
+; Status: Uvolnena
+; Start : 0.0.0.0
+; Zmena : 0.1.0.4
+; Popis : Funkcia pre kontrolu DNS Mena a ziskanie IP adresy
 Func GETIP()
     Local $ltemp = GUICtrlRead($idILCName)
 
@@ -494,18 +588,23 @@ Func GETIP()
 	   Return
     EndIf
 	$ltemp1 = Number(StringMid($ltemp,5,5))
-	If $ltemp1 < 50000 Then
-	   MsgBox ($MB_ICONERROR,"Eror DNS Name","Nespravny format cisla TRNC5xxxx " & $ltemp1)
-	   $Eror = True
-	   Return
-    EndIf
-    $ILCIP = "10.26." & StringMid($ltemp,5,2)& "." & Number(StringMid($ltemp,7,3))
+	if $Test = 0 Then
+		If $ltemp1 < 50000 Then
+		   MsgBox ($MB_ICONERROR,"Eror DNS Name","Nespravny format cisla TRNC5xxxx " & $ltemp1)
+		   $Eror = True
+		   Return
+		EndIf
+		$ILCIP = "10.26." & StringMid($ltemp,5,2)& "." & Number(StringMid($ltemp,7,3))
+	Else
+		$ILCIP = "192.168.0."& Number(StringMid($ltemp,7,3))
+	EndIf
  EndFunc
 
-
 ; SetDest()
-; Status: uvolnena
-; Popis: Funkcia pre nastavenie cielovej karty
+; Status: Uvolnena
+; Start : 0.0.0.0
+; Zmena : 0.1.0.4
+; Popis : Funkcia pre nastavenie cielovej karty
 Func SetDest()
     ; Create GUI and Buttons =========================================================================================
 	; ===========================

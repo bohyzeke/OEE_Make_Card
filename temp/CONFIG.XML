@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <c>
 	<configserver>
-		<v t="ip">10.26.48.23</v>
+		<v t="ip">192.168.0.100</v>
 		<v t="port">3306</v>
 		<v t="user">oee</v>
 		<v t="pwd">eeo</v>
 		<v t="db">konfig</v>
 	</configserver>
 	<ip>
-		<v t="ip">10.26.56.59</v>
+		<v t="ip">192.168.0.105</v>
 		<v t="dhcp">0</v>
-		<v t="HostName">TRNF56059</v>
+		<v t="HostName">TRNF00105</v>
 		<v t="DNSS">10.254.65.36</v>
 		<v t="Domain">emea.zf-world.com</v>
 	</ip>
@@ -19,6 +19,6 @@
 		<v t="port">0</v>
 	</snmpserver>
 	<hw>
-		<v t="serialnr">001354241729</v>
+		<v t="serialnr">101352707334</v>
 	</hw>
 </c>
