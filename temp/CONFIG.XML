@@ -8,9 +8,9 @@
 		<v t="db">konfig</v>
 	</configserver>
 	<ip>
-		<v t="ip">192.168.0.105</v>
+		<v t="ip">192.168.0.82</v>
 		<v t="dhcp">0</v>
-		<v t="HostName">TRNF00105</v>
+		<v t="HostName">TRNF58113</v>
 		<v t="DNSS">10.254.65.36</v>
 		<v t="Domain">emea.zf-world.com</v>
 	</ip>
@@ -19,6 +19,6 @@
 		<v t="port">0</v>
 	</snmpserver>
 	<hw>
-		<v t="serialnr">101352707334</v>
+		<v t="serialnr">001352707343</v>
 	</hw>
 </c>

@@ -1,9 +1,11 @@
 ===================================
 2018-10-03 Verzia suboru 0.1.0.5
 ===================================
-Oprava funkcie PutFileData() 
+- Oprava funkcie PutFileData()
 Po odoslani suboru na FTp sa neresetla premenna a nedalo sa dalej upravovat
 Nefunkcne tlacidlo FTP Update stiahni
 
-
+- uprava gui v nastaveni
+- uprava gui katra make Card
+- Doplnenie MakeCard  ILC191MY a ILC191MS pre HTML5
 ================================================================================
