@@ -78,15 +78,18 @@ Global $idILCName = GUICtrlCreateInput($ILCName,80,5,100)
 ;~ Global $Test = GUICtrlCreateButton("Test", 250,5)
 
 ; Vytvorenie tabov pre funkcie
-Local $idTab = GUICtrlCreateTab(5,35,280,220)
+Local $idTab = GUICtrlCreateTab(5,35,290,240)
 
 ; Tab Vytvor kartu
 GUICtrlCreateTabItem("Make Card")
 GUICtrlCreateLabel("Serial no.",10, 75)
 Global $idHWSerial = GUICtrlCreateInput($ILCSerial,80,70,100)
+
 Global $idILC170 = GUICtrlCreateRadio("ILC 170",50,100)
-Global $idILC191 = GUICtrlCreateRadio("ILC 191",170,100)
-Global $idCartWrite = GUICtrlCreateButton("Write Card",75,150,120,80)
+Global $idILC191 = GUICtrlCreateRadio("ILC 191",50,120)
+Global $idILC191MS = GUICtrlCreateRadio("ILC 191MS",170,100)
+Global $idILC191MY = GUICtrlCreateRadio("ILC 191MY",170,120)
+Global $idCartWrite = GUICtrlCreateButton("Write Card",75,150,130,80)
 
 ; Tab Podpornych programov
 GUICtrlCreateTabItem("Utility")
@@ -135,7 +138,7 @@ GUISetState()
 ; Main loop
 ; Status: Uvolnena
 ; Start : 0.0.0.0
-; Zmena : 0.1.0.4
+; Zmena : 0.1.0.5
 ; Popis : Hlavny program
 Local $idMsg
 	; Loop until the user exits.
@@ -164,12 +167,16 @@ Local $idMsg
 	   If $idMsg = $idCartWrite Then 	; Zapisanie konfigu na kartu
 		  If GUICtrlRead ($idILC170) = $GUI_CHECKED then Card170()
 		  If GUICtrlRead ($idILC191) = $GUI_CHECKED then CARD191()
-		  If GUICtrlRead ($idILC170) = $GUI_UNCHECKED And GUICtrlRead ($idILC191) = $GUI_UNCHECKED Then
+		  If GUICtrlRead ($idILC191MS) = $GUI_CHECKED then CARD191MS()
+		  If GUICtrlRead ($idILC191MY) = $GUI_CHECKED then CARD191MY()
+		  If GUICtrlRead ($idILC170) = $GUI_UNCHECKED And GUICtrlRead ($idILC191) = $GUI_UNCHECKED And GUICtrlRead ($idILC191MY)= $GUI_UNCHECKED And GUICtrlRead ($idILC191MY)= $GUI_UNCHECKED  Then
 			 MsgBox( $MB_ICONWARNING, "Chyba","Oznac typ ILC")
 		  EndIf
 		  If $eror == False then
 			 GUICtrlSetState($idILC170,$GUI_UNCHECKED )
 			 GUICtrlSetState($idILC191,$GUI_UNCHECKED )
+			 GUICtrlSetState($idILC191MS,$GUI_UNCHECKED )
+			 GUICtrlSetState($idILC191MY,$GUI_UNCHECKED )
 ;~ 			 GUICtrlSetData($idHWSerial,"00")
 			 GUICtrlSetData($idHWSerial,"001234567890")
 		  EndIf
@@ -416,7 +423,7 @@ EndFunc
 ; Status: Uvolnena
 ; Start : 0.0.0.0
 ; Zmena : 0.1.0.4
-; Popis : Zapis na kartu ILC170
+; Popis : Zapis na kartu ILC170 java a MySQL
 Func CARD170()
     $Eror = False
 
@@ -446,7 +453,7 @@ EndFunc
 ; Status: Uvolnena
 ; Start : 0.0.0.0
 ; Zmena : 0.1.0.4
-; Popis : Zapis nakartu ILC191
+; Popis : Zapis nakartu ILC191 java a MySQL
 Func CARD191()
     $Eror = False
 
@@ -455,7 +462,7 @@ Func CARD191()
     If Not $Eror Then CheckCard()
 
 	If Not $Eror Then
-	   DirCopy($dir & "\Source\ILC191",$Dest & "\cfroot",$fc_overwrite)
+	   DirCopy($dir & "\Source\ILC191\cfroot",$Dest & "\cfroot",$fc_overwrite)
 	   $data = '		<v t="ip">' & $SerIP & '</v>'
 	   _FileWriteToLine($Dest & "\cfroot\config.xml", 4,$data, True)
 	   $data = '		<v t="ip">' & $ILCIP & '</v>'
@@ -474,10 +481,10 @@ Func CARD191()
 EndFunc
 
 ; CARD191MS()
-; Status: Uvolnena
+; Status: Test
 ; Start : 0.1.0.5
 ; Zmena : 0.1.0.5
-; Popis : Zapis nakartu ILC191
+; Popis : Zapis nakartu ILC191 HTML5 a MSSQL
 Func CARD191MS()
     $Eror = False
 
@@ -486,7 +493,7 @@ Func CARD191MS()
     If Not $Eror Then CheckCard()
 
 	If Not $Eror Then
-	   DirCopy($dir & "\Source\ILC191",$Dest & "\cfroot",$fc_overwrite)
+	   DirCopy($dir & "\Source\ilc191mysql\cfroot",$Dest & "\cfroot",$fc_overwrite)
 	   $data = '		<v t="ip">' & $SerIP & '</v>'
 	   _FileWriteToLine($Dest & "\cfroot\config.xml", 4,$data, True)
 	   $data = '		<v t="ip">' & $ILCIP & '</v>'
@@ -503,6 +510,40 @@ Func CARD191MS()
 ;~    DirCopy($Dir&"\Source\ILC191",$dest&"ROOT",$FC_OVERWRITE )
 ;~    _FileWriteToLine($Dir & "\Source\ILC170\CONFIG.XML", 4,$data, True)
 EndFunc
+
+; CARD191MY()
+; Status: Test
+; Start : 0.1.0.5
+; Zmena : 0.1.0.5
+; Popis : Zapis nakartu ILC191HTML5 a MySQL
+Func CARD191MY()
+    $Eror = False
+
+    GETIP()
+    If Not $Eror Then SerialCheck()
+    If Not $Eror Then CheckCard()
+
+	If Not $Eror Then
+	   DirCopy($dir & "\Source\\ilc191mssql",$Dest & "\cfroot",$fc_overwrite)
+	   $data = '		<v t="ip">' & $SerIP & '</v>'
+	   _FileWriteToLine($Dest & "\cfroot\config.xml", 4,$data, True)
+	   $data = '		<v t="ip">' & $ILCIP & '</v>'
+	   _FileWriteToLine($Dest & "\cfroot\config.xml", 11,$data, True)
+	   $data = '		<v t="HostName">' & GUICtrlRead($idILCName) & '</v>'
+	   _FileWriteToLine($Dest & "\cfroot\config.xml", 13,$data, True)
+	   $data = '		<v t="serialnr">' & GUICtrlRead($idHWSerial)& '</v>'
+	   _FileWriteToLine($Dest & "\cfroot\config.xml", 22,$data, True)
+
+	   IniWrite($INI,"ILC","Name",GUICtrlRead($idILCName))
+	   IniWrite($INI,"","",GUICtrlRead($idHWSerial))
+	   MsgBox($MB_ICONINFORMATION,"Kopirovanie","Kopirovanie bolo uspesne",5)
+	EndIf
+;~    DirCopy($Dir&"\Source\ILC191",$dest&"ROOT",$FC_OVERWRITE )
+;~    _FileWriteToLine($Dir & "\Source\ILC170\CONFIG.XML", 4,$data, True)
+EndFunc
+
+
+
 
 ; CheckCard ()
 ; Status: Uvolnena
@@ -603,7 +644,7 @@ Func GETIP()
 ; SetDest()
 ; Status: Uvolnena
 ; Start : 0.0.0.0
-; Zmena : 0.1.0.4
+; Zmena : 0.1.0.5
 ; Popis : Funkcia pre nastavenie cielovej karty
 Func SetDest()
     ; Create GUI and Buttons =========================================================================================
@@ -616,13 +657,14 @@ Func SetDest()
 
     ; = Buttons =
 	; ===========
-	Local $DVyber = GUICtrlCreateButton("Vyber",220,40,80,25,$BS_DEFPUSHBUTTON)
-	Local $DClose = GUICtrlCreateButton("Zavri",220,80,80,25,$BS_DEFPUSHBUTTON)
+	Local $DVyber = GUICtrlCreateButton("Nastav",50,200,80,25,$BS_DEFPUSHBUTTON)
+	Local $DClose = GUICtrlCreateButton("Zavri",150,200,80,25,$BS_DEFPUSHBUTTON)
 
     ; = Label And Coments =
 	; =====================
-    Local $Status = GUICtrlCreateLabel ("cvb",10,200,200,30)
-	Local $DestSel = GuiCtrlCreateListView("Destination|Largest|Size", 20, 30, 180, 135 )
+    Local $Status1 = GUICtrlCreateLabel ("Aktualny vyber ' "& $Dest & " '" ,20,10,200,30)
+	Local $Status = GUICtrlCreateLabel ("Aktualny vyber ' "& $Dest & " '" ,20,180,200,30)
+	Local $DestSel = GuiCtrlCreateListView("Disk|velkost|jednotka", 20, 30, 280, 140 )
 ;~ 	_GUICtrlListView_SetExtendedListViewStyle($DestSel, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_CHECKBOXES))
 
     Local $LDrives = DriveGetDrive($DT_ALL)
@@ -669,7 +711,8 @@ Func SetDest()
 ;~ 		  MsgBox($MB_SYSTEMMODAL, "listview item",$Tempu[1], 2)
 		  $Dest= $Tempu[1]
 		  IniWrite($INI, "SETING","Destination",$Dest)
-		  GUICtrlSetData($Status, 'Udaje boli uložené')
+
+		  GUICtrlSetData($Status, "Prestavene na ' "& $Dest & " '")
 
 	   EndSelect
 
