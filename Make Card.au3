@@ -28,13 +28,15 @@
  AutoIt Version: 3.3.14.1
  Author:		Eduard Bohacek
  Script Name : 	Make Card
- Version : 		0.1.0.4
- Date : 		2018 10 06
+ Version : 		0.1.0.5
+ Date : 		2019 01 26
 
  Script Function:
 	Vytvorenie Karty pre ILC Phoenix.
 	Editovanie Konfigu ILC cez FTP Protokol
 	Spustanie podpornych funkcii pre ILC
+	Uprava config suboru na karte cez Ftp
+	Vymazanie a zalohovanie WEB rozhrania ILC cez FTP
 
 #ce ----------------------------------------------------------------------------
 
