@@ -1,4 +1,16 @@
 ===================================
+2019-01-25 Verzia suboru 0.1.0.6
+===================================
+- Pridanie noveho tabu "FTP Upgrade WEB"
+Pridanie noveho tabu pre upgrade Web-rozhrania
+- Oprava a vylepsenia tabu "FTP Update"
+-- blokovanie tlacidiel
+-- pridanie kontroly vstupnych poli
+- Nova funkcia Check IP
+- Uprava formatovania kodu
+================================================================================
+
+===================================
 2018-10-03 Verzia suboru 0.1.0.5
 ===================================
 - Oprava funkcie PutFileData()
