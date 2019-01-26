@@ -8,10 +8,8 @@
 
  - ConnectPlus musi byt v adresary
       C:\Program Files (x86)\Phoenix Contact\Connect Plus\ConnectPlus.exe
- - IPAssign musi byt v adresary
-      @ScriptDir &"\Source\IPAssign.exe"
- - subor CONFIG.XML musi byt v adresary
-      @ScriptDir & "\temp\CONFIG.XML"
+ - IPAssign musi byt v adresary         :   @ScriptDir &"\Source\IPAssign.exe"
+ - subor CONFIG.XML musi byt v adresary :   @ScriptDir & "\temp\CONFIG.XML"
   
    Z drojove subory musia lezat :
 
