@@ -61,6 +61,8 @@ Global $Dir = @ScriptDir
 Global $INI = $dir &"\seting.ini"
 Global $Dest = 		IniRead($INI,"SETING" 	,"Dest"		,"E:")
 Global $BacFolder = IniRead($INI,"SETTING"	,"Backup"	,$Dir)
+Global $Fol170 = 	IniRead($INI,"SETTING"	,"Fol170"	,$Dir & "\Source\ILC170" )
+Global $Fol191 =	IniRead($INI,"SETTING"	,"Fol191"	,$Dir & "\Source\ILC191" )
 Global $SerIP = 	IniRead($INI,"ILC"		,"Server"	,"10.26.48.23")
 Global $ILCName = 	IniRead($INI,"ILC"		,"Name"		,"TRNF56001")
 Global $ILCSerial = IniRead($INI,"ILC"		,"Serial"	,"001234567890")
@@ -122,7 +124,7 @@ Global $idUtilConnect = GUICtrlCreateButton("Connect Plus",150,130,120,30)
 ;~ Tab "Ftp update"
 GUICtrlCreateTabItem("FTP Update")
 GUICtrlCreateLabel ("Server IP :", 10,75)
-Local $idFSerIP = GuiCtrlcreateinput ($SerIP, 80, 70,80)
+Local $idFSerIP = GuiCtrlcreateinput ("", 80, 70,80)
 GUICtrlSetState($idFSerIP ,$GUI_DISABLE)
 GUICtrlCreateLabel ("ILC IP :", 10,97)
 Local $idFILCIP = GUICtrlCreateinput ("",80,95,80)
@@ -187,20 +189,20 @@ Local $idMsg
 		; Tab MakeCard
 			; button Write Card
 		Case $idMsg = $idCartWrite			; Tab MakeCard Button WriteCard
-		  If GUICtrlRead ($idILC170) = $GUI_CHECKED then Card170()
-		  If GUICtrlRead ($idILC191) = $GUI_CHECKED then CARD191()
-		  If GUICtrlRead ($idILC191MS) = $GUI_CHECKED then CARD191MS()
-		  If GUICtrlRead ($idILC191MY) = $GUI_CHECKED then CARD191MY()
-		  If GUICtrlRead ($idILC170) = $GUI_UNCHECKED And GUICtrlRead ($idILC191) = $GUI_UNCHECKED And GUICtrlRead ($idILC191MY)= $GUI_UNCHECKED And GUICtrlRead ($idILC191MY)= $GUI_UNCHECKED  Then
+		  If GUICtrlRead ($idILC170) = $GUI_UNCHECKED And GUICtrlRead ($idILC191) = $GUI_UNCHECKED And GUICtrlRead ($idILC191MS)= $GUI_UNCHECKED And GUICtrlRead ($idILC191MY)= $GUI_UNCHECKED  Then
 			 MsgBox( $MB_ICONWARNING, "Chyba","Oznac typ ILC")
+			 $eror= True
+		  Else
+		    If GUICtrlRead ($idILC170) = $GUI_CHECKED then CARD170()
+		    If GUICtrlRead ($idILC191) = $GUI_CHECKED then CARD191()
+		    If GUICtrlRead ($idILC191MS) = $GUI_CHECKED then CARD191MS()
+		    If GUICtrlRead ($idILC191MY) = $GUI_CHECKED then CARD191MY()
 		  EndIf
 		  If $eror == False then
 			 GUICtrlSetState($idILC170,$GUI_UNCHECKED )
 			 GUICtrlSetState($idILC191,$GUI_UNCHECKED )
 			 GUICtrlSetState($idILC191MS,$GUI_UNCHECKED )
 			 GUICtrlSetState($idILC191MY,$GUI_UNCHECKED )
-;~ 			 GUICtrlSetData($idHWSerial,"00")
-			 GUICtrlSetData($idHWSerial,"001234567890")
 		 EndIf
 
 		; Tab Utility Reaction
@@ -234,7 +236,7 @@ Local $idMsg
 		Case $idMsg = $idFGet				; Tab FTP Update Button Stiahni
 		  FileDelete ( $Dir&"\temp\config.xml" )
 		  GETIP()
-		  FtpGetXML()
+		  FtpGetXML($ILCIP)
 		  CheckFileVersion()
 		  GetFileData()
 		Case $idMsg = $idFWrite				; Tab FTP Update Button Change zmena Zapis
@@ -275,6 +277,8 @@ Local $idMsg
 		  _FTPDelWEB()
 		Case $idMsg = $idFDestBack			; Tab FTP Upgrade WEB Button Backup
 		  _FTPBackWEB()
+		Case $idMsg = $idFDestWr			; Tab FTP Upgrade WEB Button Write
+		  _FTPWrWEB()
 			; Input Change
 		Case $idMsg = $idFDestIP 			; Tab FTP Upgrade WEB Input IP Change
 		  GUICtrlSetState($idFDestCheck ,$GUI_ENABLE)
@@ -372,7 +376,7 @@ Func PutFileData()
 		EndIf
 	EndIf
 
-	If BitAND ($EditNo,4) And $fIlcType == 190 Then
+	If BitAND ($EditNo,4) And $fIlcType == 191 Then
 		$temp = GUICtrlRead($idEditilcName)
 
 		$data = '		<v t="HostName">' & $temp & '</v>'
@@ -383,7 +387,7 @@ Func PutFileData()
 
     EndIf
 
-	If BitAND ($EditNo,8) And $fIlcType == 190 Then
+	If BitAND ($EditNo,8) And $fIlcType == 191 Then
 		$temp = GUICtrlRead($idEditSerNo)
 		$stat =  SerialCheck($temp)
 		If $stat < 0 Then
@@ -447,7 +451,7 @@ Func TabSel()
 ;~     MsgBox("","",$idTab)
 	If $sTab == 2 Then
 		GETIP()
-		FtpGetXML()
+		FtpGetXML($ILCIP)
 		CheckFileVersion()
 		GetFileData()
 		GUICtrlSetState($idFeSerIP , $GUI_SHOW)
@@ -473,15 +477,15 @@ EndFunc
 ; Zmena : 0.1.0.4
 ; Popis : Ziskanie dat zo suboru Config
 Func GetFileData()
-
+	Local $data
     Global $hFileOpen = FileOpen($Dir&"\temp\config.xml", $FO_READ)
     If $hFileOpen = -1 Then
         MsgBox($MB_ICONERROR, "", "An error occurred when reading the file.")
         Return False
     EndIf
 
-    Local $data = fReadLine($hFileOpen,4,12,4)
-	GUICtrlSetData($idfSerIP,$data)
+    $data = fReadLine($hFileOpen,4,12,4)
+	GUICtrlSetData($idFSerIP,$data)
     $data = fReadLine($hFileOpen,11,12,4)
 	GUICtrlSetData($idfILCIP,$data)
 
@@ -490,7 +494,7 @@ Func GetFileData()
 	   GUICtrlSetData($idfSerNo,$data)
    EndIf
 
-	If $fIlcType = 190 Then
+	If $fIlcType = 191 Then
 	   $data = fReadLine($hFileOpen,13,18,4)
 	   GUICtrlSetData($idFilcName,$data)
 	   $data = fReadLine($hFileOpen,22,18,4)
@@ -516,13 +520,20 @@ EndFunc
 ; CheckFileVersion()
 ; Status: Uvolnena
 ; Start : 0.0.0.0
-; Zmena : 0.1.0.4
+; Zmena : 0.1.0.6
 ; Popis : Preverenie verzie Config suboru
 Func CheckFileVersion()
     Local $Flines = _FileCountLines($Dir&"\temp\config.xml")
 ;~     MsgBox ("","Countlines",$Flines)
-	If $Flines == 21 Then $fIlcType = 170
-    If $Flines == 24 Then $fIlcType = 190
+	Switch $Flines
+		Case 21
+			$fIlcType = 170
+		Case 24
+			$fIlcType = 191
+		Case Else
+			$fIlcType = -1		; prinerozpoznanom subore
+	EndSwitch
+Return $fIlcType
 EndFunc
 
 ; FtpGetXML()
@@ -530,25 +541,29 @@ EndFunc
 ; Start : 0.0.0.0
 ; Zmena : 0.1.0.4
 ; Popis : ziskanie config.xml z FTP
-Func FtpGetXML()
-    Local $IP =$ILCIP
+Func FtpGetXML($IP)
+    ;Local $IP =$ILCIP
     ;CMD()
     Local $iPing = Ping($IP, 250)
 
     If $iPing Then ; If a value greater than 0 was returned then display the following message.
-	   Local $FtpOpen = _FTP_Open("FTPupdate")
-	   Local $FtpConn = _FTP_Connect($FtpOpen,$IP,$FTPname,$FTPpass)
-	   If @error Then
-		  MsgBox ($MB_ICONERROR, '_FTP_Pripojenie', 'Chyba=' & @error)
-	   Else
-		  _FTP_FileGet($FtpConn,"config.xml",$dir&"\temp\config.xml")
-		  ;_FTP_FileGet($FtpConn,"Project.INI",$dir&"\temp\Project.INI")
-	   EndIf
-	   Local $iFtpc = _FTP_Close($FtpConn)
-	   Local $iFtpo = _FTP_Close($FtpOpen)
+		Local $FtpOpen = _FTP_Open("FTPupdate")
+		Local $FtpConn = _FTP_Connect($FtpOpen,$IP,$FTPname,$FTPpass)
+		If @error Then
+			MsgBox ($MB_ICONERROR, '_FTP_Pripojenie', 'Chyba=' & @error)
+		Else
+			Local $Return = _FTP_FileGet($FtpConn,"config.xml",$dir&"\temp\config.xml")
+			If Not $Return Then
+				MsgBox(0,"Chyba","Chyba kopirovania z FTP")
+				;_FTP_FileGet($FtpConn,"Project.INI",$dir&"\temp\Project.INI")
+			EndIf
+		EndIf
+		Local $iFtpc = _FTP_Close($FtpConn)
+		Local $iFtpo = _FTP_Close($FtpOpen)
 
     Else
-	   MsgBox($MB_ICONERROR, "Chyba pripojenia", "Zariaddenie "&$IP&" nie je dostupne" )
+		MsgBox($MB_ICONERROR, "Chyba pripojenia", "Zariaddenie "&$IP&" nie je dostupne" )
+		Return -1
     EndIf
 
 EndFunc
@@ -562,10 +577,10 @@ Func CARD170()
     $Eror = False
 
 	GETIP()
-    If Not $Eror Then SerialCheck($idHWSerial)
+    If Not $Eror Then SerialCheck(GUICtrlRead($idHWSerial))
     If Not $Eror Then CheckCard()
 	If Not $Eror Then
-	   DirCopy($dir & "\Source\ILC170",$Dest & "\cfroot",$fc_overwrite)
+	   DirCopy($Fol170 ,$Dest & "\cfroot",$fc_overwrite)
 	   $data = '		<v t="ip">' & $SerIP & '</v>'
 	   _FileWriteToLine($Dest & "\cfroot\config.xml", 4,$data, True)
 	   $data = '		<v t="ip">' & $ILCIP & '</v>'
@@ -592,11 +607,11 @@ Func CARD191()
     $Eror = False
 
     GETIP()
-    If Not $Eror Then SerialCheck($idHWSerial)
+    If Not $Eror Then SerialCheck(GUICtrlRead($idHWSerial))
     If Not $Eror Then CheckCard()
 
 	If Not $Eror Then
-	   DirCopy($dir & "\Source\ILC191\cfroot",$Dest & "\cfroot",$fc_overwrite)
+	   DirCopy( $Fol191 ,$Dest & "\cfroot",$fc_overwrite)
 	   $data = '		<v t="ip">' & $SerIP & '</v>'
 	   _FileWriteToLine($Dest & "\cfroot\config.xml", 4,$data, True)
 	   $data = '		<v t="ip">' & $ILCIP & '</v>'
@@ -607,7 +622,7 @@ Func CARD191()
 	   _FileWriteToLine($Dest & "\cfroot\config.xml", 22,$data, True)
 
 	   IniWrite($INI,"ILC","Name",GUICtrlRead($idILCName))
-	   IniWrite($INI,"","",GUICtrlRead($idHWSerial))
+	   IniWrite($INI,"ILC","Serial",GUICtrlRead($idHWSerial))
 	   MsgBox($MB_ICONINFORMATION,"Kopirovanie","Kopirovanie bolo uspesne",5)
 	EndIf
 ;~    DirCopy($Dir&"\Source\ILC191",$dest&"ROOT",$FC_OVERWRITE )
@@ -623,7 +638,7 @@ Func CARD191MS()
     $Eror = False
 
     GETIP()
-    If Not $Eror Then SerialCheck($idHWSerial)
+    If Not $Eror Then SerialCheck(GUICtrlRead($idHWSerial))
     If Not $Eror Then CheckCard()
 
 	If Not $Eror Then
@@ -638,7 +653,7 @@ Func CARD191MS()
 	   _FileWriteToLine($Dest & "\cfroot\config.xml", 22,$data, True)
 
 	   IniWrite($INI,"ILC","Name",GUICtrlRead($idILCName))
-	   IniWrite($INI,"","",GUICtrlRead($idHWSerial))
+	   IniWrite($INI,"ILC","Serial",GUICtrlRead($idHWSerial))
 	   MsgBox($MB_ICONINFORMATION,"Kopirovanie","Kopirovanie bolo uspesne",5)
 	EndIf
 ;~    DirCopy($Dir&"\Source\ILC191",$dest&"ROOT",$FC_OVERWRITE )
@@ -654,7 +669,7 @@ Func CARD191MY()
     $Eror = False
 
     GETIP()
-    If Not $Eror Then SerialCheck($idHWSerial)
+    If Not $Eror Then SerialCheck(GUICtrlRead($idHWSerial))
     If Not $Eror Then CheckCard()
 
 	If Not $Eror Then
@@ -846,7 +861,7 @@ Func SetDest()
 		  Local $Tempu =  StringSplit(GUICtrlRead(GUICtrlRead($DestSel)),  "|")
 ;~ 		  MsgBox($MB_SYSTEMMODAL, "listview item",$Tempu[1], 2)
 		  $Dest= $Tempu[1]
-		  IniWrite($INI, "SETING","Destination",$Dest)
+		  IniWrite($INI, "SETING","Dest",$Dest)
 
 		  GUICtrlSetData($Status, "Prestavene na ' "& $Dest & " '")
 
@@ -891,7 +906,7 @@ Func SetFold()
 		  ;Local $Tempu =  StringSplit(GUICtrlRead(GUICtrlRead($DestSel)),  "|")
 ;~ 		  MsgBox($MB_SYSTEMMODAL, "listview item",$Tempu[1], 2)
 		  ;$Dest= $Tempu[1]
-		  ;IniWrite($INI, "SETING","Destination",$Dest)
+		  ;IniWrite($INI, "SETING","Dest",$Dest)
 
 		  ;GUICtrlSetData($Status, "Prestavene na ' "& $Dest & " '")
 
@@ -922,19 +937,15 @@ Func CheckIP()
 			Case 3
 				MsgBox(64, "", "Error in IP address." & @LF & "Error code is: 3 - IP Address is not a valid dotted IP address (ex. valid address 190.40.100.20)")
 		EndSwitch
-	Else
-		;MsgBox(48, "", $FDestIP & " is a valid Class " & Chr(@error) & " IP address")
-		Local $iPing = Ping($FDestIP, 250)
-		If $iPing Then ; If a value greater than 0 was returned then display the following message.
-
-			GUICtrlSetData ($g_Ftp_Name,"Redy to upgrade process")
-			_FtpWButtons(1,0,1,1,1)
-
-		Else
-			MsgBox($MB_ICONERROR, "Chyba pripojenia", "Zariaddenie "&$FDestIP&" nie je dostupne" )
-		EndIf
 	EndIf
+	If $Return >= 0 Then $Return = FtpGetXML($FDestIP)
+	If $Return >= 0	Then $Return = CheckFileVersion()
+	If $Return >= 0 Then
 
+		GUICtrlSetData ($g_Ftp_Name,"ILC"&$fIlcType& " redy to upgrade process")
+		_FtpWButtons(1,0,1,1,1)
+		;MsgBox(0,"ILCTyp","Cielove ILC je Typu : " & $fIlcType)
+	EndIf
 
 EndFunc
 
@@ -958,7 +969,7 @@ Func _FTPDelWEB()
 			_FTP_FileDelete($hConn,$aFile[$i][0])
 		EndIf
 	Next
-	GUICtrlSetData ($g_Ftp_Name,"Mazanie Web koncene")
+	GUICtrlSetData ($g_Ftp_Name,"Mazanie Web ukoncene")
 	Local $iFtpc = _FTP_Close($hConn)
 	Local $iFtpo = _FTP_Close($hOpen)
 	_FtpWButtons(1,0,0,0,0)
@@ -1018,6 +1029,67 @@ Func _FTPBackWEB()
 	_FtpWButtons(1,0,0,0,0)
 EndFunc
 
+; _FTPWrWEB()
+; Status: Beta
+; Start : 0.1.0.5
+; Zmena : 0.1.0.6
+; Popis : Funkcia pre Zapisanie WEB suborov
+Func _FTPWrWEB()
+	Local $aFile1
+	_FtpWButtons(0,1,0,0,0)
+	$FDestIP = GUICtrlRead($idFDestIP)
+	Local $hOpen = _FTP_Open('MyFTP Update')  ; Otvorenie FTP
+	Local $hConn = _FTP_Connect($hOpen, $FDestIP,$FTPname,$FTPpass) ; Vytvorenie spojenia z ILC
+	_FTP_FileGet($hConn ,"config.xml",$dir&"\temp\config.xml")   ; ziskanie XML suboru
+	CheckFileVersion() ; overenie typu ILC podla poctu riadov v XML subore
+	_FTP_DirSetCurrent ( $hConn, 'WEBS' )	; Prepnutie FTP spojenia do adresara WEBS
+	Local $aFile = _FTP_ListToArrayEx($hConn, 0)  ; Vytvorenie zoznamu suborov na ILC
+	; Vymazanie obsahu adresara WEBS
+
+	For $i=1 To $aFile[0][0]
+		If $aFile[$i][2] = 128 Then
+			GUICtrlSetData ($g_Ftp_Name,"Mazanie : "&$aFile[$i][0])
+			Local $percent = 100/$afile[0][0]* $i
+			Local $fuFunctionToCall = _UpdateGUIProgressBar( $percent)
+			_FTP_FileDelete($hConn,$aFile[$i][0])
+		EndIf
+	Next
+	; Zapis Suborov do ILC
+
+	For $i=1 To 10
+	Next
+
+
+	If $fIlcType = 170 Then
+		Local $folder = $Fol170 & "/WEBS/"
+		$aFile1 = _FileListToArray($folder, "*",$FLTA_FILES)
+		For $i=1 To $aFile1[0]
+
+			GUICtrlSetData ($g_Ftp_Name,"Posielam : "&$aFile[$i])
+			Local $percent = 100/$afile[0]* $i
+			Local $fuFunctionToCall = _UpdateGUIProgressBar( $percent)
+			_FTP_FilePut ( $hConn,$folder&$aFile1[$i], $aFile1[$i] )
+		Next
+
+	EndIf
+	If $fIlcType = 191 Then
+		Local $folder = $Fol191 & "/WEBS/"
+		$aFile1 = _FileListToArray($folder, "*",$FLTA_FILES)
+		For $i=1 To $aFile1[0]
+			GUICtrlSetData ($g_Ftp_Name,"Posielam : "&$aFile1[$i])
+			Local $percent = 100/$aFile1[0]* $i
+			Local $fuFunctionToCall = _UpdateGUIProgressBar( $percent)
+			_FTP_FilePut ( $hConn,$folder&$aFile1[$i], $aFile1[$i] )
+		Next
+	EndIf
+
+
+	GUICtrlSetData ($g_Ftp_Name,"Zapis suborov Ukonceny")
+	Local $iFtpc = _FTP_Close($hConn)
+	Local $iFtpo = _FTP_Close($hOpen)
+	_FtpWButtons(1,0,0,0,0)
+EndFunc
+
 ; _FtpWButtons()
 ; Status: Uvolnena
 ; Start : 0.1.0.5
@@ -1027,8 +1099,6 @@ Func _FtpWButtons( $Check=0 , $Cancel = 0 , $Del = 0 , $WR = 0, $ReWr = 0 )
 	Local $A[5]= [$Check,$Cancel,$Del,$WR,$ReWr]
 	Local $Show[5]
 	For $i = 0 to 4
-
-
 		if $A[$i]=0 Then
 			$Show[$i] = $GUI_DISABLE
 		Else
@@ -1040,7 +1110,6 @@ Func _FtpWButtons( $Check=0 , $Cancel = 0 , $Del = 0 , $WR = 0, $ReWr = 0 )
 	GUICtrlSetState($idFDestDel ,$Show[2])
 	GUICtrlSetState($idFDestWr ,$Show[3])
 	GUICtrlSetState($idFDestBack,$Show[4])
-
 EndFunc
 
 ; _ValidIP()
@@ -1075,7 +1144,6 @@ Func _ValidIP($sIP)
            SetError(68)
            Return $String
 	EndSwitch
-
 EndFunc   ;==>_ValidIP
 
 ; _UpdateGUIProgressBar()
